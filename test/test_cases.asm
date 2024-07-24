@@ -15,6 +15,8 @@ section .bss
 section .text
     global _start
 
+    extern encrypt
+
 _start:
     ; Test case 1: Encrypt "Test123"
     mov edi, test_input1
@@ -82,6 +84,3 @@ test_fail:
 section .data
     pass_msg db "Test Pass", 10, 0
     fail_msg db "Test Fail", 10, 0
-
-; Include the encryption function
-%include "src/encryption.asm"
