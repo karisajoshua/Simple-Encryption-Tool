@@ -70,3 +70,51 @@ enc_loop:
 
 enc_done:
     ret                   ; return from function
+
+extern print_string, read_string
+
+section .data
+    prompt db "Enter text to encrypt: ", 0
+    encrypted_msg db "Encrypted text: ", 0
+    newline db 10, 0
+
+section .bss
+    input resb 128
+    input_len resb 1
+
+section .text
+    global _start
+
+_start:
+    ; Print prompt message
+    lea ecx, [prompt]
+    call print_string
+
+    ; Read user input
+    lea ecx, [input]
+    mov edx, 128
+    call read_string
+    mov [input_len], eax
+
+    ; Encrypt the input
+    mov edi, input        ; address of input buffer
+    mov ecx, [input_len]  ; length of input
+    call encrypt
+
+    ; Print encrypted message
+    lea ecx, [encrypted_msg]
+    call print_string
+
+    ; Print encrypted text
+    lea ecx, [input]
+    call print_string
+
+    ; Print newline
+    lea ecx, [newline]
+    call print_string
+
+    ; Exit program
+    mov eax, 1            ; syscall number for sys_exit
+    xor ebx, ebx          ; exit status 0
+    int 0x80              ; make syscall
+
